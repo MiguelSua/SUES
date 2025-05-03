@@ -1,47 +1,32 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
-// Configuración de conexión a PostgreSQL
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
-  dialectOptions: { 
-    ssl: { 
-      require: true,
-      rejectUnauthorized: false 
-    } 
-  },
-  logging: false // Desactiva los logs de SQL en consola
+  dialectOptions: { ssl: { require: true, rejectUnauthorized: false } },
+  logging: false
 });
 
-// Definición del modelo Pedido
 const Pedido = sequelize.define('Pedido', {
-  nombre: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true // Validación adicional
-    }
-  },
-  telefono: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
-  },
-  servicio: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
-  },
+  nombre: DataTypes.STRING,
+  telefono: DataTypes.STRING,
+  servicio: DataTypes.STRING,
   fechaHora: {
     type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: Sequelize.NOW // Valor por defecto
+    defaultValue: Sequelize.NOW
   }
 }, {
-  timestamps: false // Desactiva createdAt y updatedAt
+  timestamps: false, // ¡IMPORTANTE!
+  createdAt: false,  // ¡EXPLÍCITO!
+  updatedAt: false,  // ¡EXPLÍCITO!
+  tableName: 'Pedidos',
+  freezeTableName: true
 });
 
-module.exports = { sequelize, Pedido };
+// Función de inicialización CONFIRMADA
+async function startDB() {
+  await sequelize.authenticate();
+  await Pedido.sync({ force: true }); // Borra y recrea la tabla
+  console.log('✅ Base de datos lista');
+}
+
+module.exports = { sequelize, Pedido, startDB };
