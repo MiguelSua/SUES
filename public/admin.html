@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin - Pedidos</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Pedidos recibidos</h1>
+    <ul id="lista-pedidos"></ul>
+  </div>
+  <script>
+    fetch('/pedidos')
+      .then(res => res.json())
+      .then(data => {
+        const lista = document.getElementById('lista-pedidos');
+        data.forEach(pedido => {
+          const li = document.createElement('li');
+          li.textContent = `${pedido.nombre} - ${pedido.servicio} - ${pedido.fechaHora} - ${pedido.telefono}`;
+          lista.appendChild(li);
+        });
+      });
+  </script>
+</body>
+</html>
