@@ -25,9 +25,10 @@ const Pedido = sequelize.define('Pedido', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  fechaHora: {  // Consistent naming (camelCase)
-    type: DataTypes.DATE,  // Changed to DATE for proper date handling
-    allowNull: false
+  fechaHora: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    field: 'fechahora' // Para forzar nombre en BD
   }
 });
 
