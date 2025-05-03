@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
-// Single database connection configuration
+// Configuración de conexión a PostgreSQL
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
   dialectOptions: { 
@@ -8,28 +8,40 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
       require: true,
       rejectUnauthorized: false 
     } 
-  }
+  },
+  logging: false // Desactiva los logs de SQL en consola
 });
 
-// Single model definition
+// Definición del modelo Pedido
 const Pedido = sequelize.define('Pedido', {
   nombre: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true // Validación adicional
+    }
   },
   telefono: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   servicio: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   fechaHora: {
     type: DataTypes.DATE,
     allowNull: false,
-    field: 'fechahora' // Para forzar nombre en BD
+    defaultValue: Sequelize.NOW // Valor por defecto
   }
+}, {
+  timestamps: false // Desactiva createdAt y updatedAt
 });
 
 module.exports = { sequelize, Pedido };
