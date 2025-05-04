@@ -1,16 +1,17 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
+// Single database connection configuration
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
   dialectOptions: { 
     ssl: { 
-      require: true, 
+      require: true,
       rejectUnauthorized: false 
-    }
-  },
-  logging: false
+    } 
+  }
 });
 
+// Single model definition
 const Pedido = sequelize.define('Pedido', {
   nombre: {
     type: DataTypes.STRING,
@@ -24,16 +25,10 @@ const Pedido = sequelize.define('Pedido', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  fechaHora: {
-    type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW
+  fechaHora: {  // Consistent naming (camelCase)
+    type: DataTypes.DATE,  // Changed to DATE for proper date handling
+    allowNull: false
   }
-}, {
-  timestamps: false,       // Desactiva campos automáticos
-  createdAt: false,        // Confirmado
-  updatedAt: false,        // Confirmado  
-  tableName: 'Pedidos',    // Nombre exacto de tabla
-  freezeTableName: true    // Evita pluralizaciones
 });
 
 module.exports = { sequelize, Pedido };
