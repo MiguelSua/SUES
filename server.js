@@ -6,12 +6,15 @@ const { sequelize, Pedido, startDB } = require('./models/Pedido');
 app.get('/pedidos', async (req, res) => {
   try {
     const pedidos = await Pedido.findAll({
-      order: [['fechaHora', 'DESC']] // Ordena SOLO por fechaHora
+      order: [['fechaHora', 'DESC']]  // Solo ordena por fechaHora
     });
     res.json(pedidos);
   } catch (error) {
-    console.error('Error GET /pedidos:', error);
-    res.status(500).json({ error: 'Error al obtener pedidos' });
+    console.error('Error en GET /pedidos:', error);
+    res.status(500).json({ 
+      error: 'Error al obtener pedidos',
+      detalle: process.env.NODE_ENV === 'development' ? error.message : null
+    });
   }
 });
 
